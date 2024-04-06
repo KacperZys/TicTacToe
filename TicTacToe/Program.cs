@@ -17,7 +17,6 @@ namespace TicTacToe
         public char currentPlayer { get; private set; } = 'X';
         public byte turn { get; private set; } = 0;
 
-        private byte[,] board = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
         private char[,]? currentBoard = new char[3, 3];
 
         private void ChangeCurrentPlayer()
@@ -68,24 +67,27 @@ namespace TicTacToe
 
         private bool CheckWin()
         {
-            int xX = 0;
-            int oX = 0;
-            int xY = 0;
-            int oY = 0;
+            int[][] winConditions = new int[8][];
+            winConditions[0] = new int[] { 0, 1, 2 };
+            winConditions[1] = new int[] { 3, 4 ,5 };
+            winConditions[2] = new int[] { 6, 7, 8 };
+            winConditions[3] = new int[] { 0, 3, 6 };
+            winConditions[4] = new int[] { 1, 4 ,7 };
+            winConditions[5] = new int[] { 2, 5, 8 };
+            winConditions[6] = new int[] { 0, 4, 8 };
+            winConditions[7] = new int[] { 2, 4, 6 };
 
-            for (int i = 0; i < currentBoard.GetLength(0); i++)
+            foreach (var condition in winConditions)
             {
-                if (xX >= 3 || oX >= 3 || xY >= 3 || oY >= 3) return true;
-
-                for (int j = 0; j < currentBoard.GetLength(1); j++)
+                char symbol = currentBoard[condition[0] / 3, condition[0] % 3];
+                if (symbol != '\0' &&
+                    symbol == currentBoard[condition[1] / 3, condition[1] % 3] &&
+                    symbol == currentBoard[condition[2] / 3, condition[2] % 3])
                 {
-                    if (currentBoard[i, j] == 'X') xX++;
-                    if (currentBoard[i, j] == 'O') oX++;
+                    return true;
                 }
-
-                if (currentBoard[i, 0] == 'X') xY++;
-                if (currentBoard[i, 0] == 'O') oY++;
             }
+
 
             return false;
         }
@@ -107,28 +109,23 @@ namespace TicTacToe
         {
             Console.Clear();
 
-            Console.WriteLine($"Current player: {currentPlayer} turn: {turn}");
-            Console.WriteLine(" 0   1   2");
-            for (int row = 0; row < 3; row++)
-            {
-                Console.WriteLine("  ---|---|---");
-                for (int col = 0; col < 3; col++)
-                {
-                    if (col > 0)
-                        Console.Write("|");
-                    Console.Write($" {currentBoard[row, col]} ");
-                }
-                Console.WriteLine("|");
-            }
-            Console.WriteLine("  ---|---|---");
+           Console.WriteLine($" {(currentBoard[0, 0] != '\0' ? currentBoard[0, 0] : ' ')} | {(currentBoard[0, 1] != '\0' ? currentBoard[0, 1] : ' ')}" +
+               $" | {(currentBoard[0, 2] != '\0' ? currentBoard[0, 2] : ' ')} ");
+           Console.WriteLine("---+---+---");
+           Console.WriteLine($" {(currentBoard[1, 0] != '\0' ? currentBoard[1, 0] : ' ')} | {(currentBoard[1, 1] != '\0' ? currentBoard[1, 1] : ' ')}" +
+               $" | {(currentBoard[1, 2] != '\0' ? currentBoard[1, 2] : ' ')} ");
+           Console.WriteLine("---+---+---");
+           Console.WriteLine($" {(currentBoard[2, 0] != '\0' ? currentBoard[2, 0] : ' ')} | {(currentBoard[2, 1] != '\0' ? currentBoard[2, 1] : ' ')}" +
+               $" | {(currentBoard[2, 2] != '\0' ? currentBoard[2, 2] : ' ')} ");
         }
 
         public void Start()
         {
-            while (!CheckWin() || !IsDraw())
+            while (true)
             {
                 DisplayBoard();
                 InputSquare();
+                if (CheckWin() && !IsDraw()) break;
                 turn++;
                 ChangeCurrentPlayer();
             }
