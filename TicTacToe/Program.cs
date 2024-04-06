@@ -31,12 +31,12 @@ namespace TicTacToe
             sbyte column = -1;
 
             
-            while( (row < 0 || row > 2) || (column < 0 || column > 2) )
+            while( (row < 1 || row > 3) || (column < 1 || column > 3) )
             {
                 Console.Write("Enter row: ");
                 row = Convert.ToSByte(Console.ReadLine());
 
-                if (row < 0 || row > 2)
+                if (row < 1 || row > 3)
                 {
                     Console.WriteLine("Wrong number entered.");
                 }
@@ -44,11 +44,14 @@ namespace TicTacToe
                 Console.Write("Enter column: ");
                 column = Convert.ToSByte(Console.ReadLine());
 
-                if (column < 0 || column > 2)
+                if (column < 1 || column > 3)
                 {
                     Console.WriteLine("Wrong number entered.");
                 }
             }
+
+            row--;
+            column--;
 
             if(IsEmpty(row, column)) currentBoard[row, column] = currentPlayer;
             else
